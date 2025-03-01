@@ -1,6 +1,142 @@
 # PDAW
 
+Aplicatie WEB care are ca scop imbunatatirea gestionarii studentilor si cursurilor din cadrul unei universitati.
 
+**Cerințe generale:**
+
+- Utilizatorii vor fi de 3 tipuri: student, profesor si administrator.
+
+- Aplicația trebuie să aibă un frontend care să permită interacțiunea utilizatorului cu diferite funcționalități specifice lui.
+
+- Backend-ul va gestiona baza de date și va permite executarea de query-uri SQL pentru a obține informațiile solicitate.
+
+- CRUD pentru studenți, cursuri, evaluări și orar.
+
+- Administratorii vor putea adauga, modifica și șterge informații pentru fiecare dintre entitățile din aplicație (student, curs, evaluare, orar).
+
+- Profesorii si studentii vor putea vizualiza informatiile pentru entitățile din aplicație.
+
+- Integrarea backend-ului cu un api de la un LLM. (opțional)
+
+
+
+**Cerințe pentru fiecare componentă:**
+
+1. Frontend:
+
+- Dashboard interactiv pentru vizualizarea datelor și gestionarea datelor.
+
+- Din rolul de administrator:
+    1. Pagina de studenți: Vizualizare și gestionare informații despre studenți (Nume, ID, Cursuri, Note).
+    2. Pagina de cursuri: Vizualizare și gestionare cursuri (Nume, Descriere, Profesor, Termene).
+    3. Pagina de orar: Vizualizarea și gestionarea programului cursurilor și a sălilor.
+
+- Din rolul de student:
+    1. Profilul propriu: Vizualizarea informatiilor despre cursurile curente.
+    2. Pagina de evaluări: Vizualizarea evaluărilor (Tip evaluare, Scor, Student).
+    3. Pagina de orar: Vizualizarea programului cursurilor.
+
+
+- Din rolul de profesor:
+    1. Profilul propriu: Vizualizarea informatiilor despre cursurile predate.
+    2. Pagina de evaluări: Vizualizarea și adăugarea evaluărilor (Tip evaluare, Scor, Student).
+    3. Pagina de orar: Vizualizarea și gestionarea programului cursurilor și a sălilor.
+
+
+2. Backend:
+
+- API pentru CRUD pentru studenți, cursuri, evaluări și orar.
+
+- Conexiune la baza de date pentru execuția query-urilor SQL.
+
+- Autentificare și autorizație pentru a controla accesul la funcționalitățile aplicației.
+
+- Interacțiune cu baza de date pentru a adăuga, modifica și șterge date.
+
+
+3. Baza de date:
+
+- Tabele pentru studenți, cursuri, evaluări și orar.
+
+- Crearea unui schema ER pentru a organiza corect datele și relațiile dintre tabele.
+
+- Validarea datelor la inserare pentru a preveni erorile.
+
+
+
+4. Funcționalități pe viitor:
+
+- Generare automată de statistici pe baza datelor din aplicație (de exemplu, media notelor, rate de promovare) prin integrarea AI-ului.
+
+- Extracție automată de date din fișa disciplinei.
+
+
+
+**Specificații**
+
+1. Frontend - React:
+
+- Tehnologii: React 18.
+- Componente:
+    - Navbar: Navigare între paginile aplicației.
+    - Dashboard: Prezentarea unei viziuni de ansamblu a datelor (grafice și statistici).
+    - Formulare CRUD: Formulare pentru adăugarea și modificarea datelor pentru studenți, cursuri, evaluări și orar.
+    - Calendar pentru orar: Vizualizarea orarului cursurilor.
+
+
+2. Backend (Spring Boot):
+
+- Tehnologii: Java, Spring Boot, Spring Data JPA.
+- API RESTful:
+    - Endpoints pentru CRUD (POST, GET, PUT, DELETE) pentru fiecare entitate (student, curs, evaluare, orar).
+    - Validarea datelor la inserare și actualizare.
+    - Autentificare și autorizare cu JWT pentru a asigura securitatea aplicației.
+    - Servicii pentru gestionarea orarului și a evaluărilor.
+
+
+3. Baza de date:
+
+- SGBD: PostgreSQL.
+- Tabele:
+    - Student: ID, Nume, Numar matricol, Data nașterii, Cursuri asociate.
+    - Curs: ID, Nume curs, Profesor, Descriere.
+    - Evaluare: ID, Tip evaluare, Nota, Student.
+    - Orar: ID, Curs, Sala, Ziua, Ora
+
+
+4. Planificare funcționalități pe termen lung:
+
+- Implementarea unei solutii AI pentru a genera queries din limbaj natural.
+- Implementarea de statistici avansate folosind OpenAI sau alte soluții AI pentru a genera rapoarte.
+- Integrarea funcționalității de extracție de date din fișe PDF folosind un framework Python, care va extrage datele din fișele disciplinei și le va adăuga automat în baza de date.
+
+
+**Planificare Calendaristică**
+
+Săptămâna 1-2:
+- Analiză și planificare detaliată a aplicației (detalii despre frontend, backend, schema bazei de date).
+- Crearea unui plan detaliat de dezvoltare pentru backend și frontend.
+- Configurație de bază pentru Spring Boot și React.
+
+Săptămâna 3-4
+- Configurarea bazei de date și definirea tabelelor de bază (Student, Curs, Evaluare, Orar).
+- Crearea endpoint-uri pentru CRUD.
+
+Săptămâna 5-6-7:
+- Crearea frontend-ului: Pagina pentru studenți, cursuri și evaluări.
+- Routarea paginilor in functie de roluri.
+- Integrare între frontend și backend.
+
+Săptămâna 8-9:
+- Implementarea paginii de orar: crearea unui calendar interactiv și integrarea acestuia cu backend-ul.
+
+Săptămâna 10-12:
+- Implementarea funcționalității de autentificare și autorizare pentru securitatea aplicației.
+- Crearea dashboard-ului pentru vizualizarea datelor (grafice și statistici simple).
+
+Săptămâna 13:
+- Finisarea detaliilor de UI
+- Realizarea documentatiei
 
 ## Getting started
 
