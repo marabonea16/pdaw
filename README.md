@@ -84,9 +84,9 @@ Aplicatie WEB care are ca scop imbunatatirea gestionarii studentilor si cursuril
     - Calendar pentru orar: Vizualizarea orarului cursurilor.
 
 
-2. Backend (Spring Boot):
+2. Backend (FastAPI):
 
-- Tehnologii: Java, Spring Boot, Spring Data JPA.
+- Tehnologii: FastAPI, Python.
 - API RESTful:
     - Endpoints pentru CRUD (POST, GET, PUT, DELETE) pentru fiecare entitate (student, curs, evaluare, orar).
     - Validarea datelor la inserare și actualizare.
