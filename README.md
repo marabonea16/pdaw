@@ -74,9 +74,9 @@ Aplicatie WEB care are ca scop imbunatatirea gestionarii studentilor si cursuril
 
 **Specificații**
 
-1. Frontend - React:
+1. Frontend (NextJS):
 
-- Tehnologii: React 18.
+- Tehnologii: NextJS, TailwindCSS.
 - Componente:
     - Navbar: Navigare între paginile aplicației.
     - Dashboard: Prezentarea unei viziuni de ansamblu a datelor (grafice și statistici).
