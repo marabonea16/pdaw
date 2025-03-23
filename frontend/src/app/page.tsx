@@ -2,75 +2,84 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import AnimatedSVG from "./components/animatedSVG";
-import { useState, useEffect, useRef } from "react";
+import AnimatedSVG from "./components/animatedSVG"
+import { useState, useEffect, useMemo  } from "react";
+import { useHeader } from "./context/headerContext";
+import Link from "next/link";
 
 export default function Home() {
-  const headerLogoRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [hideFirstSection, setHideFirstSection] = useState(false);
+  const [hideFirstSection, setHideFirstSection] = useState<boolean | null>(null);
+  const { isVisible, setIsFixed, setIsVisible, headerLogoRef} = useHeader();
+
+  useEffect(() => {
+    const hasAnimated = sessionStorage.getItem("hasAnimated") === "true";
+    setHideFirstSection(hasAnimated);
+  }, []);
   
   useEffect(() => {
-    window.scrollTo(0, 0);
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 50); 
   }, []);
+  
+  const debounce = (func: Function, wait: number) => {
+    let timeout: ReturnType<typeof setTimeout>;
+    return function(...args: any[]) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  };
 
-  const smoothScrollTo = (element: HTMLElement) => {
-    const targetY = element.getBoundingClientRect().top + window.scrollY;
+  const smoothScrollTo = debounce((element: HTMLElement) => {
+    const header = document.querySelector("header");
+    const headerHeight = header ? header.offsetHeight : 0;
+    const targetY = element.getBoundingClientRect().top + window.scrollY - 2 * headerHeight - 20;
+  
     const startY = window.scrollY;
     const distance = targetY - startY;
-    const duration = 1000; // 1.5 seconds for a smoother effect
-    let startTime: number | null = null;
+    const duration = 4000; // 4 seconds for a slow scroll
+    const fps = 60; // 60 frames per second
+    const totalFrames = (duration / 1000) * fps;
+    let frame = 0;
   
-    // Smooth cubic Bezier easing function (similar to easeInOutCubic)
-    const easeInOutCubic = (t: number) => {
-      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    };
-  
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const elapsed = timestamp - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeInOutCubic(progress);
-  
+    const interval = setInterval(() => {
+      frame++;
+      const progress = frame / totalFrames;
+      const easedProgress = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      
       window.scrollTo(0, startY + distance * easedProgress);
   
-      if (elapsed < duration) {
-        requestAnimationFrame(step);
-      }
-    };
-  
-    requestAnimationFrame(step);
-  };
+      if (frame >= totalFrames) clearInterval(interval);
+    }, 1000 / fps);
+  }, 50);
 
 
   const handleAnimationComplete = () => {
     setIsVisible(true);
     const nextSection = document.getElementById("next-section");
-    
-    // Add a timeout to allow the first section's exit transition to complete
+  
     if (nextSection) {
       setTimeout(() => {
-        smoothScrollTo(nextSection);
+        sessionStorage.setItem("hasAnimated", "true");
         setHideFirstSection(true);
-      }, 1000);  // Adjust timing if necessary, should match exit transition duration
+        setTimeout(() => {
+          setIsFixed(true);
+        }, 1000);
+        setTimeout(() => {
+          smoothScrollTo(nextSection);
+        }, 1200);
+      }, 500);
     }
   };
 
+  if (hideFirstSection === null) return null;
+
+
+
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="bg-white text-[#2F4F83] w-full p-4 py-7 flex justify-between items-center">
-        <div className="flex items-center gap-4 px-5">
-          <div ref={headerLogoRef} className={`w-[50px] ${isVisible ? '' : 'opacity-0'}`}>
-            <img src="/animation.svg" alt="Header Logo" className="w-[50px] h-[50px]" />
-          </div>
-          <h1 className="text-xl font-bold">University Portal Technology</h1>
-        </div>
-        <nav className="flex font-semibold gap-8">
-          <a href="/" className="hover:text-gray-400 transition-colors">Home</a>
-          <a href="/about" className="hover:text-gray-400 transition-colors">About</a>
-          <a href="/contact" className="hover:text-gray-400 transition-colors">Contact</a>
-        </nav>
-      </header>
+    <div className="flex flex-col min-h-screen ">
       <main className="flex flex-col items-center justify-center flex-grow p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <AnimatePresence>
           {!hideFirstSection && (
@@ -82,8 +91,7 @@ export default function Home() {
               transition={{
                 duration: 1, 
                 ease: "easeInOut", 
-                // Optional: Adding some layout transition settings for smoother disappearance
-                layout: { duration: 0.5, type: "spring", stiffness: 100 }
+                layout: { duration: 1, type: "spring", stiffness: 100 }
               }}
               className="flex justify-center items-center min-h-screen"
             >
@@ -98,8 +106,11 @@ export default function Home() {
             </motion.section>
           )}
         </AnimatePresence>
-        <section id="next-section" className="text-center sm:text-left">
-          <h2 className="text-4xl font-bold mt-4">Welcome to University Portal</h2>
+        <section
+          id="next-section"
+          className="text-center mt-[100px] sm:text-left"
+        >
+          <h2 className="text-4xl font-bold mt-4 text-[#2F4F83]">Welcome to University Portal</h2>
           <p className="text-lg mt-2">Connecting Students and Teachers</p>
           <h2 className="text-2xl font-semibold mb-4">About Us</h2>
           <p className="text-sm">
@@ -107,7 +118,7 @@ export default function Home() {
           </p>
         </section>
         <section className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
+          <Link
             className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
             href="/students"
           >
@@ -119,8 +130,8 @@ export default function Home() {
               height={20}
             />
             For Students
-          </a>
-          <a
+          </Link>
+          <Link
             className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
             href="/teachers"
           >
@@ -132,12 +143,9 @@ export default function Home() {
               height={20}
             />
             For Teachers
-          </a>
+          </Link>
         </section>
       </main>
-      <footer className="bg-gray-800 text-white w-full p-4 flex justify-center items-center">
-        <p>&copy; 2025 University Portal. All rights reserved.</p>
-      </footer>
     </div>
   );
 }

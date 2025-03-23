@@ -25,6 +25,23 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+
+header {
+  transition: top 0.3s ease-in-out;
+  height: 60px; /* Fixed height */
+}
+
+header.fixed {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
 .transparent {
   opacity: 0;
 }
