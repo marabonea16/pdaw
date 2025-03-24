@@ -6,6 +6,9 @@ import AnimatedSVG from "./components/animatedSVG"
 import { useState, useEffect, useMemo  } from "react";
 import { useHeader } from "./context/headerContext";
 import Link from "next/link";
+import Slider from "./components/slider";
+
+const slides = ["/images/1.jpeg", "/images/2.jpeg", "/images/3.jpeg", "/images/4.jpeg", "/images/5.jpeg", "/images/6.jpeg", "/images/7.jpeg"];
 
 export default function Home() {
   const [hideFirstSection, setHideFirstSection] = useState<boolean | null>(null);
@@ -79,8 +82,8 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col min-h-screen ">
-      <main className="flex flex-col items-center justify-center flex-grow p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="flex flex-col ">
+      <main className="flex flex-col  items-center justify-center flex-grow gap-16 font-[family-name:var(--font-geist-sans)]">
       <AnimatePresence>
           {!hideFirstSection && (
             <motion.section
@@ -93,7 +96,7 @@ export default function Home() {
                 ease: "easeInOut", 
                 layout: { duration: 1, type: "spring", stiffness: 100 }
               }}
-              className="flex justify-center items-center min-h-screen"
+              className="flex justify-center items-center min-h-screen pt-70"
             >
               <div className="flex items-center gap-4 transform -translate-y-50">
                 <AnimatedSVG headerLogoRef={headerLogoRef} onAnimationComplete={handleAnimationComplete} />
@@ -108,42 +111,71 @@ export default function Home() {
         </AnimatePresence>
         <section
           id="next-section"
-          className="text-center mt-[100px] sm:text-left"
+          className="text-center mt-[17px] w-full flex items-center justify-center"
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            height: "100vh", 
+            maxWidth: "100%",
+            padding: "0",
+            margin: "0",
+          }}
         >
-          <h2 className="text-4xl font-bold mt-4 text-[#2F4F83]">Welcome to University Portal</h2>
-          <p className="text-lg mt-2">Connecting Students and Teachers</p>
-          <h2 className="text-2xl font-semibold mb-4">About Us</h2>
-          <p className="text-sm">
-            Our university portal is designed to facilitate seamless communication and collaboration between students and teachers. Access course materials, submit assignments, and stay updated with the latest announcements.
-          </p>
-        </section>
-        <section className="flex gap-4 items-center flex-col sm:flex-row">
-          <Link
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="/students"
-          >
-            <Image
-              className="dark:invert"
-              src="/file.svg"
-              alt="Student Icon"
-              width={20}
-              height={20}
-            />
-            For Students
-          </Link>
-          <Link
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="/teachers"
-          >
-            <Image
-              className="dark:invert"
-              src="/file.svg"
-              alt="Teacher Icon"
-              width={20}
-              height={20}
-            />
-            For Teachers
-          </Link>
+          <div 
+            style={{
+              position: "absolute",
+              left: 0,
+              width: "100%",
+              height: "100%",
+              zIndex: 0,
+            }}>
+            <Slider slides={slides} />
+          </div>
+          <div style={{
+              position: "relative",
+              zIndex: 1,
+              width: "100%",
+              maxWidth: "800px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              padding: "0",
+              margin: "0",
+            }}>
+            <h2 className="text-5xl font-bold mt-4  text-[#2F4F83]">Welcome to University Portal</h2>           
+            <div className="flex gap-4 items-center py-10 justify-center flex-col sm:flex-row">
+              <Link
+                className="rounded-md border border-solid border-transparent transition-colors flex items-center justify-center font-bold
+                bg-background text-[#2F4F83] gap-2 hover:bg-[#2F4F83] hover:text-background h-24 sm:h-64 px-4 sm:px-8"
+                href="/students"
+              >
+                <Image
+                  className="dark:invert"
+                  src="/students.svg"
+                  alt="Student Icon"
+                  width={70}
+                  height={70}
+                />
+                For Students
+              </Link>
+              <Link
+               className="rounded-md border border-solid border-transparent transition-colors flex items-center justify-center font-bold
+                bg-background text-[#2F4F83] gap-2 hover:bg-[#2F4F83] hover:text-background h-24 sm:h-64 px-4 sm:px-8"
+                href="/teachers"
+              >
+                <Image
+                  className="dark:invert"
+                  src="/teachers.svg"
+                  alt="Teacher Icon"
+                  width={80}
+                  height={80}
+                />
+                For Teachers
+              </Link>
+            </div>
+          </div>
         </section>
       </main>
     </div>

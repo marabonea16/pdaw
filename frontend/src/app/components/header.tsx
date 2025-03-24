@@ -17,16 +17,16 @@ const Header = () => {
         <div ref={headerLogoRef} className={`w-[50px] transition-opacity duration-500 ${isVisible ? "opacity-100" : "opacity-0"}`}>
           <Image src="/animation.svg" alt="Header Logo" width={50} height={50} priority />
         </div>
-        <h1 className="text-xl font-bold">University Portal Technology</h1>
+        <h1 className="text-xl font-bold text-[#2F4F83]">University Portal Technology</h1>
       </div>
       <nav className="flex font-semibold gap-10">
-        <Link href="/" className="hover:text-gray-400 transition-colors">
+        <Link href="/" className="text-[#2F4F83] hover:text-gray-400 transition-colors">
           Home
         </Link>
-        <Link href="/sign-in" className="hover:text-gray-400 transition-colors">
+        <Link href="/sign-in" className="text-[#2F4F83] hover:text-gray-400 transition-colors">
           Sign In
         </Link>
-        <Link href="/contact" className="hover:text-gray-400 transition-colors">
+        <Link href="/contact" className="text-[#2F4F83] hover:text-gray-400 transition-colors">
           Contact
         </Link>
       </nav>

@@ -33,7 +33,8 @@ export default function RootLayout({
        <HeaderProvider>
           <Header />
           {children}
-          <footer className="bg-[#2F4F83] text-white w-full p-4 flex justify-center items-center">
+          <footer style={{ paddingBottom: '20px', paddingTop: '20px' }}
+          className="bg-[#2F4F83] text-white w-full flex flex-col justify-center items-center">
             <p>&copy; 2025 University Portal. All rights reserved.</p>
           </footer>
         </HeaderProvider>
