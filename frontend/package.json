@@ -9,12 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.8.0",
+    "@prisma/client": "^6.5.0",
+    "@radix-ui/react-slot": "^1.1.2",
+    "bcryptjs": "^3.0.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.5.0",
     "lucide-react": "^0.483.0",
     "next": "15.2.1",
+    "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "smooth-scroll": "^16.1.3"
+    "react-toastify": "^11.0.5",
+    "smooth-scroll": "^16.1.3",
+    "tailwind-merge": "^3.0.2",
+    "tw-animate-css": "^1.2.5",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -23,8 +34,10 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/smooth-scroll": "^16.1.4",
+    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.2.1",
+    "prisma": "^6.5.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

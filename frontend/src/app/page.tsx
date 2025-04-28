@@ -7,12 +7,18 @@ import { useState, useEffect, useMemo  } from "react";
 import { useHeader } from "./context/headerContext";
 import Link from "next/link";
 import Slider from "./components/slider";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./lib/auth";
+import { redirect } from "next/navigation";
 
-const slides = ["/images/1.jpeg", "/images/2.jpeg", "/images/3.jpeg", "/images/4.jpeg", "/images/5.jpeg", "/images/6.jpeg", "/images/7.jpeg"];
-
-export default function Home() {
+export default async function Home() {
   const [hideFirstSection, setHideFirstSection] = useState<boolean | null>(null);
   const { isVisible, setIsFixed, setIsVisible, headerLogoRef} = useHeader();
+  const session = await getServerSession(authOptions);
+
+  if (session) {
+    redirect("/dashboard");
+  }
 
   useEffect(() => {
     const hasAnimated = sessionStorage.getItem("hasAnimated") === "true";
@@ -109,6 +115,7 @@ export default function Home() {
             </motion.section>
           )}
         </AnimatePresence>
+        { }
         <section
           id="next-section"
           className="text-center mt-[17px] w-full flex items-center justify-center"
@@ -129,7 +136,7 @@ export default function Home() {
               height: "100%",
               zIndex: 0,
             }}>
-            <Slider slides={slides} />
+            <Slider/>
           </div>
           <div style={{
               position: "relative",

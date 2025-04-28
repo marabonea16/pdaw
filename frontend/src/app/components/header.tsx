@@ -3,9 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useHeader } from "../context/headerContext";
+import { useSession } from "next-auth/react"; 
+
 
 const Header = () => {
   const { isFixed, isVisible, headerLogoRef } = useHeader(); // Get values from context
+  const { data: session } = useSession();
 
   return (
     <header
@@ -20,11 +23,11 @@ const Header = () => {
         <h1 className="text-xl font-bold text-[#2F4F83]">University Portal Technology</h1>
       </div>
       <nav className="flex font-semibold gap-10">
-        <Link href="/" className="text-[#2F4F83] hover:text-gray-400 transition-colors">
+        <Link href={session ? "/dashboard" : "/"} className="text-[#2F4F83] hover:text-gray-400 transition-colors">
           Home
         </Link>
-        <Link href="/sign-in" className="text-[#2F4F83] hover:text-gray-400 transition-colors">
-          Sign In
+        <Link href={session ? "/profile" : "/sign-in"} className="text-[#2F4F83] hover:text-gray-400 transition-colors">
+          {session ? "Profile" : "Sign In"}
         </Link>
         <Link href="/contact" className="text-[#2F4F83] hover:text-gray-400 transition-colors">
           Contact

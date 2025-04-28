@@ -1,32 +1,49 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { data } from 'framer-motion/client';
 
-interface SliderProps {
-  slides: string[];
-  interval?: number;
+const URL: string = 'http://localhost:8000/static/images/slider/';
+
+interface Image {
+  id: number;
+  url: string;
 }
 
-const Slider = ({ slides, interval = 5000 }: SliderProps) => {
+const Slider = () => {
+  const interval = 5000; 
+  const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    fetch(URL) 
+      .then(response => response.json())
+      .then((data: Image[])=> {
+        const imageUrls = data.map((image: Image) => image.url);
+        setImages(imageUrls);
+      })
+      .catch(error => console.error('Error fetching images:', error));
+  }, []);
+
+  console.log(images);
+
+  useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % slides.length);
+      setCurrentIndex((prev) => (prev + 1) % images.length);
     }, interval);
     return () => clearInterval(timer);
-  }, [slides.length, interval]);
+  }, [images.length, interval]);
 
   return (
 
     <div className="absolute inset-0 w-full h-full flex overflow-hidden">
       <AnimatePresence>
-        {slides.map((slide, index) =>
+        {images.map((imageUrl, index) =>
           index === currentIndex ? (
             <motion.img
               key={index}
-              src={slide}
+              src={`http://localhost:8000${imageUrl}`}
               alt={`Slide ${index + 1}`}
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 0.4, x: 0 }}

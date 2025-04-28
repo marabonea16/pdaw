@@ -17,9 +17,9 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8">
-      <div className="max-w-3xl text-center bg-white p-10 shadow-lg rounded-2xl">
-        <h1 className="text-4xl font-extrabold text-[#2F4F83] mb-4">Contact Us</h1>
+    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8 pt-20">
+      <div className="max-w-3xl text-center bg-white p-10 shadow-lg rounded-md">
+        <h1 className="text-4xl font-bold text-[#2F4F83] mb-4">Contact Us</h1>
         <p className="text-lg text-gray-600 mb-6">
           Have questions or need assistance? Reach out to us using the form below.
         </p>
@@ -34,7 +34,7 @@ export default function ContactPage() {
               placeholder="Your Name"
               value={formData.name}
               onChange={handleChange}
-              className="p-3 border border-gray-300 rounded-lg w-full"
+              className="p-3 border border-gray-300 rounded-md w-full"
               required
             />
             <input
