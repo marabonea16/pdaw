@@ -44,7 +44,7 @@ def move_slider_images_to_server(db: Session):
 
 
 
-@router.get("/static/images/slider/", response_model=List[ImageSchema])
+@router.get("/images/slider", response_model=List[ImageSchema])
 async def get_slider_images(db: Session = Depends(get_db)):
     """Fetch all slider images from the database."""
     slider_images = db.query(Image).filter(Image.is_slider_image == True).all()

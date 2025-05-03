@@ -2,9 +2,6 @@
 
 import { useState, useEffect, use } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { data } from 'framer-motion/client';
-
-const URL: string = 'http://localhost:8000/static/images/slider/';
 
 interface Image {
   id: number;
@@ -17,7 +14,13 @@ const Slider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    fetch(URL) 
+    fetch('http://localhost:8000/images/slider', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    })
       .then(response => response.json())
       .then((data: Image[])=> {
         const imageUrls = data.map((image: Image) => image.url);
@@ -28,6 +31,7 @@ const Slider = () => {
 
   console.log(images);
 
+  
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length);

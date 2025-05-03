@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+
 import Credentials from "next-auth/providers/credentials"
 import type { NextAuthOptions } from "next-auth";
 import { signInSchema } from "./zod"
@@ -20,7 +20,7 @@ export const authOptions: NextAuthOptions = {
         let user = null
         const { email, password } = await signInSchema.parseAsync(credentials)
  
-        const response = await fetch("http://localhost:8000/api/auth/login", {
+        const response = await fetch("http://localhost:8000/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password}),

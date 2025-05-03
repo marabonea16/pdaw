@@ -1,8 +1,10 @@
 'use client';
 
+import { User } from "@/types";
 import Sidebar from "../components/sidebar";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
+import { useSession } from "next-auth/react";
 
 
 const AddUserPage = () => {
@@ -17,7 +19,9 @@ const AddUserPage = () => {
     
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
-
+    const { data: session } = useSession();
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    
     useEffect(() => {
         const email = `${form.first_name.toLowerCase()}.${form.last_name.toLowerCase()}@gmail.com`;
         setForm((prev) => ({
@@ -30,40 +34,42 @@ const AddUserPage = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
       };
-      const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setMessage("");
-    
-        try {
-          const response = await fetch("http://localhost:8000/auth/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form),
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
+      setMessage("");
+  
+      try {
+        const response = await fetch("http://localhost:8000/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+  
+        if (response.ok) {
+          toast.success("User created successfully!");
+          setCurrentUser(session?.user as User);
+          setForm({
+            first_name: "",
+            last_name: "",
+            email: "",
+            password: "",
+            role: "student",
+            uni_id: "",
           });
-    
-          if (response.ok) {
-            toast.success("User created successfully!");
-            setForm({
-              first_name: "",
-              last_name: "",
-              email: "",
-              password: "",
-              role: "student",
-              uni_id: "",
-            });
-          } else {
-            const errorData = await response.text();
-            console.log(errorData);
-            toast.error("Failed to create user");
-          }
-        } catch (err) {
-          console.error(err);
-          toast.error("An error occurred.");
-        } finally {
-          setLoading(false);
+        } else {
+          const errorData = await response.text();
+          console.log(errorData);
+          toast.error("Failed to create user");
         }
-      };
+      } catch (err) {
+        console.error(err);
+        toast.error("An error occurred.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
       return (
         <div className="min-h-screen bg-gray-100">
@@ -126,7 +132,9 @@ const AddUserPage = () => {
                         >
                         <option value="student">Student</option>
                         <option value="teacher">Teacher</option>
-                        <option value="admin">Admin</option>
+                        {currentUser?.role === "superadmin" && (
+                          <option value="admin">Admin</option>
+                        )}
                         </select>
                     </div>
                       <div className="mb-4">

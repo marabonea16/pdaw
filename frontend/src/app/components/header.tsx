@@ -29,8 +29,8 @@ const Header = () => {
         <Link href={session ? "/profile" : "/sign-in"} className="text-[#2F4F83] hover:text-gray-400 transition-colors">
           {session ? "Profile" : "Sign In"}
         </Link>
-        <Link href="/contact" className="text-[#2F4F83] hover:text-gray-400 transition-colors">
-          Contact
+        <Link href="/about-us" className="text-[#2F4F83] hover:text-gray-400 transition-colors">
+          About Us
         </Link>
       </nav>
     </header>

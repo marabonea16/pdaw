@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import logging
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from app.routes import slider, auth, users
+from app.routes import slider, auth, users, teachers, courses, faculties, students, admins
 from app.routes.slider import move_slider_images_to_server
 from app.routes.auth import create_superadmin
 from app.models.user import User
@@ -34,8 +34,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 origins = [
@@ -51,11 +49,18 @@ app.add_middleware(
 )
 
 app.include_router(slider.router)
+app.include_router(slider.router, prefix="/images")
 app.include_router(auth.router)
 app.include_router(auth.router, prefix="/auth")
 app.include_router(users.router)
 app.include_router(users.router, prefix="/users")
-
+app.include_router(users.router, prefix="/users/email")
+app.include_router(teachers.router)
+app.include_router(courses.router)
+app.include_router(courses.router, prefix="/courses")
+app.include_router(faculties.router)
+app.include_router(students.router)
+app.include_router(admins.router)
 
 @app.get("/")
 def root():
