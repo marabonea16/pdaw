@@ -6,11 +6,12 @@ class Course(Base):
     __tablename__ = "courses"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True)
+    name = Column(String)
     description = Column(String)
-    code = Column(String, unique=True, index=True)
+    code = Column(String)
     semester = Column(String)
-    year = Column(Integer)
+    year = Column(String)
     credits = Column(Integer)
+    instructor_id = Column(String, ForeignKey("teachers.id"))
     major_id = Column(Integer, ForeignKey("majors.id"))
     mandatory = Column(Boolean, default=True)

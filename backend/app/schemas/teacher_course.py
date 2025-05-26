@@ -8,12 +8,10 @@ class TeacherCourseResponse(BaseModel):
     class Config:
         orm_mode = True
 
-class TeacherCourseCreateRequest(BaseModel):
+class TeacherCourseCreate(BaseModel):
     teacher_id: str
     course_id: int
 
-    class Config:
-        orm_mode = True
 
 class TeacherCourseUpdateRequest(BaseModel):
     teacher_id: Optional[str] = None

@@ -5,6 +5,7 @@ import { User } from "../../types"
 import { useEffect, useState } from "react";
 import UserCard from "../components/userCard";
 import { useSession } from "next-auth/react";
+import ProtectedRoute from "../components/ProtectedRoutes";
 
 
 const AllUsersPage = () => {
@@ -13,6 +14,15 @@ const AllUsersPage = () => {
     const [filter, setFilter] = useState<string>("all");
     const { data: session } = useSession();
     const [currentUser, setCurrentUser] = useState<User | null>(null);
+    
+
+    useEffect(() => {
+      if (session) {
+        setCurrentUser(session.user as User);
+        fetchUsers();
+      }
+    }, [session]);
+
     
     const fetchUsers = async () => {
         try {
@@ -27,7 +37,6 @@ const AllUsersPage = () => {
             const data = await response.json();
             setUsers(data); 
             setFilteredUsers(data);
-            setCurrentUser(session?.user as User);
             console.log(data);
           } else {
             console.error("Failed to fetch users");
@@ -97,6 +106,7 @@ const AllUsersPage = () => {
       };
 
     return (
+      <ProtectedRoute>
         <div className="min-h-screen bg-gray-100"> 
             <Sidebar/>
             <div className="flex flex-col  min-h-screen bg-gray-100 border-b-2 border-gray-200 py-20 md:py-30 pl-64">
@@ -112,7 +122,6 @@ const AllUsersPage = () => {
                     key={user.id}
                     user={user}
                     currentUser={currentUser}
-                    onView={(user) => console.log('Viewing', user)}
                     onEdit={handleEditUser}
                     onDelete={handleDeleteUser}
                   />
@@ -120,6 +129,7 @@ const AllUsersPage = () => {
                 </div>
             </div>
         </div>
+      </ProtectedRoute>
     )
 }
 

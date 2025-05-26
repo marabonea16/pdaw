@@ -3,12 +3,20 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.course import CourseResponse, CourseCreateRequest, CourseUpdateRequest
 from app.models.course import Course
+from app.models.student import Student
+from app.models.student_course import StudentCourse
+from app.models.teacher_course import TeacherCourse
 
 router = APIRouter()
 
-@router.post("/courses")
+@router.post("/courses", response_model = CourseResponse)
 async def create_course(course: CourseCreateRequest, db: Session = Depends(get_db)):
     """Create a new course."""
+
+    existing = db.query(Course).filter_by(code=course.code, major_id=course.major_id).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Course code already exists for this major.")
+
     new_course = Course(
         name=course.name,
         description=course.description,
@@ -17,13 +25,14 @@ async def create_course(course: CourseCreateRequest, db: Session = Depends(get_d
         year=course.year,
         credits=course.credits,
         instructor_id=course.instructor_id,
-        faculty_id=course.faculty_id,
+        major_id=course.major_id,
+        mandatory=course.mandatory,
     )
     db.add(new_course)
     db.commit()
     db.refresh(new_course)
 
-    return {"message": "Course created successfully!"}
+    return new_course
 
 @router.get("/courses", response_model=list[CourseResponse])
 async def get_users(db: Session = Depends(get_db)):
@@ -46,6 +55,8 @@ async def delete_user(course_id: int, db: Session = Depends(get_db)):
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
     
+    db.query(TeacherCourse).filter(TeacherCourse.course_id == course.id).delete()
+    
     db.delete(course)
     db.commit()
     return {"message": "Course deleted successfully"}
@@ -65,4 +76,13 @@ async def update_user(course_id: int, course: CourseUpdateRequest, db: Session =
     db.commit()
     db.refresh(db_course)
     return db_course
+
+@router.get("/courses/{course_id}/students")
+async def get_user(course_id: int, db: Session = Depends(get_db)):
+    students = (
+        db.query(StudentCourse)
+        .filter(StudentCourse.course_id == course_id)
+        .all()
+    )
+    return students
 

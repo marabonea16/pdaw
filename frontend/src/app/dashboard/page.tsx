@@ -3,6 +3,8 @@
 import { Users, GraduationCap, UserCog, BookOpen, Building, Award } from "lucide-react";
 import Sidebar from "../components/sidebar";
 import { useEffect, useState } from 'react';
+import { useSession } from "next-auth/react";
+import ProtectedRoute from "../components/ProtectedRoutes";
 
 export default function Dashboard() {
   const [studentCount, setStudentCount] = useState<number>(0);
@@ -10,11 +12,15 @@ export default function Dashboard() {
   const [adminStaffCount, setAdminStaffCount] = useState<number>(0);
   const [coursesCount, setCoursesCount] = useState<number>(0);
   const [facultiesCount, setFacultiesCount] = useState<number>(0);
+  const [majorsCount, setMajorsCount] = useState<number>(0);
+  const { data: session } = useSession();
+
+
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [studentsRes, academicRes, adminRes, coursesRes, facultiesRes] = await Promise.all([
+        const [studentsRes, academicRes, adminRes, coursesRes, facultiesRes, majorsRes] = await Promise.all([
           fetch("http://localhost:8000/students", {
             method: "GET",
             headers: {
@@ -44,7 +50,13 @@ export default function Dashboard() {
             headers: {
                 "Content-Type": "application/json",
             },
-         })
+         }),
+          fetch("http://localhost:8000/majors", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+          }),
         ]);
 
         const studentsData = await studentsRes.json();
@@ -52,12 +64,13 @@ export default function Dashboard() {
         const adminData = await adminRes.json();
         const coursesData = await coursesRes.json();
         const facultiesData = await facultiesRes.json();
-       
+        const majorsData = await majorsRes.json();
         setStudentCount(studentsData.length);
         setAcademicStaffCount(academicData.length);
         setAdminStaffCount(adminData.length);
         setCoursesCount(coursesData.length);
         setFacultiesCount(facultiesData.length);
+        setMajorsCount(majorsData.length);
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
       }
@@ -68,6 +81,7 @@ export default function Dashboard() {
 
  
   return (
+  <ProtectedRoute>
     <div className="min-h-screen bg-gray-100"> 
       <Sidebar/>
       <section className="py-20 md:py-30 pl-64 flex items-center justify-center">
@@ -113,12 +127,13 @@ export default function Dashboard() {
               <div className="bg-teal-50 p-4 rounded-full mb-4">
                 <Award className="h-8 w-8 text-teal-500" />
               </div>
-              <h3 className="text-4xl font-bold text-gray-700 mb-2">94%</h3>
-              <p className="text-gray-500">Graduation Rate</p>
+              <h3 className="text-4xl font-bold text-gray-700 mb-2">{majorsCount}</h3>
+              <p className="text-gray-500">Majors</p>
             </div>
           </div>
         </div>
       </section>
     </div>
+  </ProtectedRoute>
   );
 }

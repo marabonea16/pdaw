@@ -12,7 +12,7 @@ class StudentCourseResponse(BaseModel):
     class Config:
         orm_mode = True
 
-class StudentCourseCreateRequest(BaseModel):
+class StudentCourseCreate(BaseModel):
     student_id: str
     course_id: int
     semester: str
@@ -33,3 +33,8 @@ class StudentCourseUpdateRequest(BaseModel):
 
     class Config:
         orm_mode = True
+
+class StudentCourseGradeUpdate(BaseModel):
+    exam_grade: Optional[float] = None
+    activity_grade: Optional[float] = None
+    final_grade: Optional[float] = None

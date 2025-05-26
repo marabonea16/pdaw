@@ -128,6 +128,7 @@ export default function Profile() {
             <p className="text-lg p-3 text-gray-600"><strong>Name:</strong> {user?.first_name} {user?.last_name}</p>
             <p className="text-lg p-3 text-gray-600"><strong>Email:</strong> {user?.email}</p>
             <p className="text-lg p-3 text-gray-600"><strong>Role:</strong> {user?.role}</p>
+            <p className="text-lg p-3 text-gray-600"><strong>University ID:</strong> {user?.uni_id}</p>
           </div>
           <p
             className="text-md font-medium text-[#2F4F83] mb-4 text-right cursor-pointer hover:underline"

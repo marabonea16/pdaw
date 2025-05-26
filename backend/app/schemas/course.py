@@ -6,8 +6,9 @@ class CourseCreateRequest(BaseModel):
     description: str
     code: str
     semester: str
-    year: int
+    year: str
     credits: int
+    instructor_id: str
     major_id: int
     mandatory: bool
 
@@ -19,8 +20,9 @@ class CourseUpdateRequest(BaseModel):
     description: Optional[str]
     code: Optional[str]
     semester: Optional[str]
-    year: Optional[int]
+    year: Optional[str]
     credits: Optional[int]
+    instructor_id: Optional[str]
     major_id: Optional[int]
     mandatory: Optional[bool]
 
@@ -33,8 +35,9 @@ class CourseResponse(BaseModel):
     description: str
     code: str
     semester: str
-    year: int
+    year: str
     credits: int
+    instructor_id: str
     major_id: int
     mandatory: bool
 

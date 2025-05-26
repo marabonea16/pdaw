@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Sidebar from "../components/sidebar";
 import { ToastContainer, toast } from 'react-toastify';
 import { useSession } from "next-auth/react";
-import { User } from "@/types";
+import { User, Major } from "@/types";
+import { redirect } from "next/navigation";
+import ProtectedRoute from "../components/ProtectedRoutes";
 
 const AddCoursePage = () => {
   const [form, setForm] = useState({
@@ -15,12 +17,18 @@ const AddCoursePage = () => {
     year: "",
     credits: "",
     instructor_id: "",
-    faculty_id: ""
+    major_id: "",
+    mandatory: false
   });
 
   const [teachers, setTeachers] = useState<User[]>([]);
+  const [majors, setMajors] = useState<Major[]>([]);
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
+
+   if (!session) {
+            redirect("/");
+        }
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -41,9 +49,31 @@ const AddCoursePage = () => {
     fetchTeachers();
   }, []);
 
+  useEffect(() => {
+    const fetchMajors = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/majors");
+        if (res.ok) {
+          const data = await res.json();
+          setMajors(data);
+          console.log("Fetched majors:", data);
+        } else {
+          console.error("Failed to fetch majors");
+        }
+      } catch (error) {
+        console.error("Error fetching majors:", error);
+      }
+    };
+
+    fetchMajors();
+  }, []);
+
+  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const value = e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value;
+  setForm({ ...form, [e.target.name]: value });
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,6 +88,43 @@ const AddCoursePage = () => {
 
       if (res.ok) {
         toast.success("Course created successfully!");
+
+        const newCourse = await res.json(); 
+        const courseId = newCourse.id;
+        const linkRes = await fetch("http://localhost:8000/teacher_courses", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            teacher_id: form.instructor_id,
+            course_id: courseId,
+          }),
+        });
+
+        if (!linkRes.ok) {
+          toast.warn("Course created, but failed to assign teacher.");
+        } else {
+          toast.success("Course and teacher assigned successfully!");
+        }
+
+        const bulkAssignRes = await fetch("http://localhost:8000/student_courses/bulk_assign", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            course_id: courseId,
+            major_id: form.major_id,
+            year: form.year,
+            semester: form.semester
+          }),
+        });
+
+        if (!bulkAssignRes.ok) {
+          toast.warn("Course created, but failed to assign students.");
+        } else {
+          toast.success("Course assigned to students successfully!");
+        }
+
+        
+
         setForm({
           name: "",
           description: "",
@@ -66,7 +133,8 @@ const AddCoursePage = () => {
           year: "",
           credits: "",
           instructor_id: "",
-          faculty_id: ""
+          major_id: "",
+          mandatory: false
         });
       } else {
         const error = await res.text();
@@ -81,6 +149,7 @@ const AddCoursePage = () => {
   };
 
   return (
+  <ProtectedRoute>
     <div className="min-h-screen bg-gray-100">
       <Sidebar />
       <section className="py-20 md:py-30 pl-64 flex items-center justify-center">
@@ -93,8 +162,7 @@ const AddCoursePage = () => {
               { label: "Code", name: "code" },
               { label: "Semester", name: "semester" },
               { label: "Year", name: "year" },
-              { label: "Credits", name: "credits" },
-              { label: "Faculty ID", name: "faculty_id" }
+              { label: "Credits", name: "credits" }
             ].map(({ label, name }) => (
               <div className="mb-4" key={name}>
                 <label className="block text-md font-medium text-gray-600">{label}</label>
@@ -119,11 +187,48 @@ const AddCoursePage = () => {
               >
                 <option value="">Select Instructor</option>
                 {teachers.map((teacher) => (
-                  <option key={teacher.id} value={teacher.id}>
-                    ID {teacher.id} - {teacher.first_name} {teacher.last_name}
+                  <option key={teacher.uni_id} value={teacher.uni_id}>
+                    {teacher.uni_id} - {teacher.first_name} {teacher.last_name}
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-md font-medium text-gray-600">Major</label>
+              <select
+                name="major_id"
+                value={form.major_id}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-600 focus:border-gray-800 sm:text-sm"
+              >
+                <option value="">Select Major</option>
+                {majors.map((major) => (
+                  <option key={major.id} value={major.id}>
+                    ID {major.id} - {major.code} - {major.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mb-4 mt-6">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="mandatory"
+                  name="mandatory"
+                  checked={form.mandatory}
+                  onChange={(e) => setForm({ ...form, mandatory: e.target.checked })}
+                  className="h-4 w-4 text-[#2F4F83] focus:ring-[#2F4F83] border-gray-300 rounded"
+                />
+                <label htmlFor="mandatory" className="ml-2 block text-md font-medium text-gray-600">
+                  Mandatory Course
+                </label>
+              </div>
+              <p className="text-sm text-gray-500 mt-1">
+                Check this box if this course is mandatory for the selected major.
+              </p>
             </div>
 
             <button
@@ -138,6 +243,7 @@ const AddCoursePage = () => {
         </div>
       </section>
     </div>
+  </ProtectedRoute>
   );
 };
 
