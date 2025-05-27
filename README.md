@@ -29,18 +29,15 @@ Aplicatie WEB care are ca scop imbunatatirea gestionarii studentilor si cursuril
 - Din rolul de administrator:
     1. Pagina de studenți: Vizualizare și gestionare informații despre studenți (Nume, ID, Cursuri, Note).
     2. Pagina de cursuri: Vizualizare și gestionare cursuri (Nume, Descriere, Profesor, Termene).
-    3. Pagina de orar: Vizualizarea și gestionarea programului cursurilor și a sălilor.
 
 - Din rolul de student:
     1. Profilul propriu: Vizualizarea informatiilor despre cursurile curente.
     2. Pagina de evaluări: Vizualizarea evaluărilor (Tip evaluare, Scor, Student).
-    3. Pagina de orar: Vizualizarea programului cursurilor.
 
 
 - Din rolul de profesor:
     1. Profilul propriu: Vizualizarea informatiilor despre cursurile predate.
     2. Pagina de evaluări: Vizualizarea și adăugarea evaluărilor (Tip evaluare, Scor, Student).
-    3. Pagina de orar: Vizualizarea și gestionarea programului cursurilor și a sălilor.
 
 
 2. Backend:
@@ -66,6 +63,8 @@ Aplicatie WEB care are ca scop imbunatatirea gestionarii studentilor si cursuril
 
 4. Funcționalități pe viitor:
 
+- Gestionare orar
+
 - Generare automată de statistici pe baza datelor din aplicație (de exemplu, media notelor, rate de promovare) prin integrarea AI-ului.
 
 - Extracție automată de date din fișa disciplinei.
@@ -81,7 +80,6 @@ Aplicatie WEB care are ca scop imbunatatirea gestionarii studentilor si cursuril
     - Navbar: Navigare între paginile aplicației.
     - Dashboard: Prezentarea unei viziuni de ansamblu a datelor (grafice și statistici).
     - Formulare CRUD: Formulare pentru adăugarea și modificarea datelor pentru studenți, cursuri, evaluări și orar.
-    - Calendar pentru orar: Vizualizarea orarului cursurilor.
 
 
 2. Backend (FastAPI):
@@ -91,21 +89,16 @@ Aplicatie WEB care are ca scop imbunatatirea gestionarii studentilor si cursuril
     - Endpoints pentru CRUD (POST, GET, PUT, DELETE) pentru fiecare entitate (student, curs, evaluare, orar).
     - Validarea datelor la inserare și actualizare.
     - Autentificare și autorizare cu JWT pentru a asigura securitatea aplicației.
-    - Servicii pentru gestionarea orarului și a evaluărilor.
 
 
 3. Baza de date:
 
 - SGBD: PostgreSQL.
-- Tabele:
-    - Student: ID, Nume, Numar matricol, Data nașterii, Cursuri asociate.
-    - Curs: ID, Nume curs, Profesor, Descriere.
-    - Evaluare: ID, Tip evaluare, Nota, Student.
-    - Orar: ID, Curs, Sala, Ziua, Ora
 
 
 4. Planificare funcționalități pe termen lung:
 
+- Implementarea unei solutii pentru gestionarea orarului
 - Implementarea unei solutii AI pentru a genera queries din limbaj natural.
 - Implementarea de statistici avansate folosind OpenAI sau alte soluții AI pentru a genera rapoarte.
 - Integrarea funcționalității de extracție de date din fișe PDF folosind un framework Python, care va extrage datele din fișele disciplinei și le va adăuga automat în baza de date.
